@@ -13,6 +13,7 @@ public class ChatClient {
     private Socket socket;
     private static final int SERVER_PORT = 8899;
     private static final String ADDRESS = "127.0.0.1";
+    private static final String QUIT = "quit";
 
     private BufferedWriter writer;
     private BufferedReader reader;
@@ -26,10 +27,14 @@ public class ChatClient {
         }
 
     }
-    private void sendMsg(String msg) throws IOException {
+    public void sendMsg(String msg) throws IOException {
         if (!socket.isOutputShutdown()){
-            writer.write(msg);
+            writer.write(msg+"\n");
             writer.flush();
+        }
+        if (QUIT.equals(msg)){
+            writer.close();
+            System.out.println("客户端主动退出");
         }
     }
     private void close(){
@@ -44,11 +49,10 @@ public class ChatClient {
     private void start(){
         try {
             this.socket = new Socket(ADDRESS,SERVER_PORT);
-            System.out.println("客户端启动了！！！");
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             //处理用户输入的消息（发送给服务端）
-            new Thread(new UserInputHandler(writer,this.socket.getPort())).start();
+            new Thread(new UserInputHandler(this)).start();
             //读取服务端发送过来的消息
             receiveMsg();
         }catch (IOException e){
@@ -60,7 +64,9 @@ public class ChatClient {
             close();
         }
     }
-
+    public boolean readyToQuit(String msg){
+        return QUIT.equals(msg);
+    }
     public static void main(String[] args) {
         ChatClient chatClient = new ChatClient();
         chatClient.start();

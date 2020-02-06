@@ -1,4 +1,4 @@
-package com.vsniu.jupiter.bio.client;
+package com.vsniu.jupiter.nio.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 /**
  * @Auther: wangfeng7
- * @Date: 2020/2/6 16:16
+ * @Date: 2020/2/6 19:06
  * @Description:
  */
 public class UserInputHandler implements Runnable {
@@ -15,7 +15,6 @@ public class UserInputHandler implements Runnable {
     public UserInputHandler(ChatClient chatClient) {
         this.chatClient = chatClient;
     }
-
     @Override
     public void run() {
         System.out.println("等待用户输入。。。");
@@ -24,7 +23,7 @@ public class UserInputHandler implements Runnable {
             while (true){
                 String userMsg = consoleReader.readLine();
                 chatClient.sendMsg(userMsg);
-                if (chatClient.readyToQuit(userMsg)){
+                if(chatClient.readyToQuit(userMsg)){
                     break;
                 }
             }
