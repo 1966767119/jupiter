@@ -56,7 +56,21 @@ public class ChatClient {
             if (socketChannel.isConnectionPending()){
                 socketChannel.finishConnect();
                 //新开线程处理用户输入
-                new Thread(new UserInputHandler(this)).start();
+                new Thread(()->{
+                    System.out.println("等待用户输入。。。");
+                    BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+                    try {
+                        while (true){
+                            String userMsg = consoleReader.readLine();
+                            sendMsg(userMsg);
+                            if(readyToQuit(userMsg)){
+                                break;
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
                 socketChannel.register(selector,SelectionKey.OP_READ);
             }
         }else if (key.isReadable()){

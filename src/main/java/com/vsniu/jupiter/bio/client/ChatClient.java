@@ -52,7 +52,21 @@ public class ChatClient {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             //处理用户输入的消息（发送给服务端）
-            new Thread(new UserInputHandler(this)).start();
+            new Thread(()->{
+                System.out.println("等待用户输入。。。");
+                BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+                try {
+                    while (true){
+                        String userMsg = consoleReader.readLine();
+                        sendMsg(userMsg);
+                        if (readyToQuit(userMsg)){
+                            break;
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
             //读取服务端发送过来的消息
             receiveMsg();
         }catch (IOException e){
