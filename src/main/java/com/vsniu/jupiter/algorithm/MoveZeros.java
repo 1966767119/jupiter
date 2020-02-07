@@ -36,6 +36,24 @@ public class MoveZeros {
         }
         nums[nums.length-1]=0;
     }
+
+    public void moveZeroesOthers(int[] nums) {
+        int i = 0;
+        int count = 0;
+        for(int j = 0 ; j < nums.length ; j++){
+            if(nums[j] != 0){
+                nums[i] = nums[j];
+                i++;
+            }
+            else{
+                //keep count of zeroes
+                count++;
+            }
+        }
+        for(int z = nums.length - count;z < nums.length;z++){
+            nums[z] = 0;
+        }
+    }
     public static void main(String[] args){
         MoveZeros solution = new MoveZeros();
         //int[] array = {0,1,0,3,12};
