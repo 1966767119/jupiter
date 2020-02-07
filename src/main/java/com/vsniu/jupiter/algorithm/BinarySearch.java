@@ -14,6 +14,10 @@ public class BinarySearch {
         int l = 0;
         int r = array.length - 1;
         while (l <= r){ //当l <= r时，区间[l...r]仍然是有效的
+            /**
+             *这里当l和r都足够大的时候，l+r可以出现整型益处，最好用
+             * mid = l + (r-l)/2 才最准确
+             */
             int mid = ( l + r )/2;
             if (target == array[mid]){
                 return mid;
